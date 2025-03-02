@@ -5,7 +5,7 @@ Ubuntu 24.04
 ## Introduction
 First thing first, this is not a Rebble official guide. This is just my personal note on how to set up the Pebble development environment. I am pretty sure I will forget it all in a week, so to prevent my goldfish memory from taking the wheel, I wrote down what I can remember from start to when I finally got the emulator up and running.
 
-Most of the installation parts are written from my memory. I did not repeat the installation to confirm all the steps. A mistake/typo or more will be found as someone else read and follow through these steps. 
+Most of the installation parts are written from my memory. I did not repeat the installation to confirm all the steps. A mistake/typo or more will be found as someone else reads and follows through these steps. 
 
 I am just a noob trying to dabble into Pebble development, so please keep in mind that you are following these steps at your own risk.
 
@@ -56,15 +56,18 @@ export DISPLAY=:0
 
 ## X11 Forwarding
 ### 1. Modify X11 Forwarding in SSH daemon configuration file
+
 1. Open the SSH daemon configuration file.
 ```console
 sudo vi /etc/ssh/sshd_config
 ```
 *Note: can also use `vim` and `nano`*
+
 2. Uncomment or modify the lines with `ForwardingX11`. This line allows the graphical application to be forwarded over to your computer.
 ```console
 ForwardingX11 yes
 ```
+
 3. Exit and save
 
 ### 2. Install X11-apps
@@ -73,7 +76,7 @@ In host terminal, run the following command
 sudo apt-get -y install x11-apps
 ```
 ### 3. Enable X11 Forwarding
-Before starting Docker container, allow X11 forwarding by running the following command on host machine:
+Before starting Docker container, allow X11 Forwarding by running the following command on host machine:
 ```console
 xhost +
 ```
@@ -216,7 +219,7 @@ In the docker container interactive shell, run the following command
 ```console
 exit
 ```
-**WARNING: if you exit the interactive shell, this will stop the docker container as well. That means all the data populate from the point of containing starting and exiting will be gone.**
+**WARNING: if you exit the interactive shell, this will stop the docker container as well. That means all the data populate from the point of container starting and exiting will be gone.**
 
 **REMEMBER TO TRANSFER ANY FILES BEFORE EXITING**
 
