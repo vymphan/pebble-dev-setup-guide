@@ -101,7 +101,7 @@ After running the above command, Docker will open an interactive shell. Looks li
 ```console
 root@2aef30c81e77:/opt/pebble-sdk-4.5-linux64# 
 ```
-*Note: again, this `docker run` command will not link the project folder on host machine with the project folder in Docker container. If source code is on the host machine, it will need to be transferred to Docker container. See guides in "Copy files/folders between a container and the local file system" below.
+*Note: again, this `docker run` command will not link the project folder on host machine with the project folder in Docker container. If source code is on the host machine, it will need to be transferred to Docker container. See guides in "Copy files/folders between a container and the local file system" below.*
 
 ### Second Option - The Container Will Be Able to Access a Source Code Directory on Host Machine
 The `docker run` function before has an extra flag `-v /HOST/PATH:/CONTAINER/PATH`. This flag allows host and container to share a directory on host machine. This is useful for development on host machine and using container to build and run emulator.
@@ -215,8 +215,11 @@ pebble clean
 Run the `build` command above to rebuild a project when there is a code change.
 
 ## Copy files/folders between a container and the local file system
+
 **Note: `CONTAINER` is the container's name**
+
 **Note 2: Run the following commands on host machine**
+
 ### Copy a local file into container
 ```console
  docker cp ./some_file CONTAINER:/path/to/destination/folder/on/docker/container/
