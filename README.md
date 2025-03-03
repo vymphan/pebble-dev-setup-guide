@@ -20,7 +20,9 @@ Happy hacking!
 
 ## Docker
 ### 1. Download Docker
-Download Docker Desktop from the official site. Instructions can be found at: https://docs.docker.com/desktop/setup/install/linux/ubuntu/
+Download Docker Desktop from the official site. 
+
+Instructions can be found at: https://docs.docker.com/desktop/setup/install/linux/ubuntu/
 ### 2. Pull Pebble SDK Docker Image
 Official site: https://hub.docker.com/r/rebble/pebble-sdk
 In terminal, run the following command to pull the docker image from Docker Hub
@@ -57,6 +59,8 @@ export DISPLAY=:0
 ```
 
 ## X11 Forwarding
+This setup is needed for forwarding the display of the emulator from the container to host machine.
+
 ### 1. Modify X11 Forwarding in SSH daemon configuration file
 
 1. Open the SSH daemon configuration file.
@@ -84,6 +88,7 @@ xhost +
 ```
 
 ## Run the Pebble SDK Docker Container
+### First Option - No Sharing Directories between Host and Container
 To run the Pebble SDK Docker container, run the following command in the host terminal
 ```console
 docker run --name=RebbleSDK -it \
@@ -96,7 +101,21 @@ After running the above command, Docker will open an interactive shell. Looks li
 ```console
 root@2aef30c81e77:/opt/pebble-sdk-4.5-linux64# 
 ```
-*Note: This docker run command will not link the project folder on host machine with the project folder in Docker container. If source code is on the host machine, it will need to be transferred to Docker container. See guides in "Copy files/folders between a container and the local file system" below*
+*Note: again, this `docker run` command will not link the project folder on host machine with the project folder in Docker container. If source code is on the host machine, it will need to be transferred to Docker container. See guides in "Copy files/folders between a container and the local file system" below.
+
+### Second Option - The Container Will Be Able to Access a Source Code Directory on Host Machine
+The `docker run` function before has an extra flag `-v /HOST/PATH:/CONTAINER/PATH`. This flag allows host and container to share a directory on host machine. This is useful for development on host machine and using container to build and run emulator.
+```console
+docker run --name=RebbleSDK -it \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v ~/.Xauthority:/home/pebble/.Xauthority \
+    -v /HOST/PATH:/CONTAINER/PATH \
+    rebble/pebble-sdk
+```
+`-v` option for basic volumn and mount operations. If the directory is not available on host machine, it will create a new one.
+
+`/HOST/PATH:/CONTAINER/PATH` the first part before `:` is the path to the directory to be shared with the container. The second part is the path where the shared directory can be found inside the container.
 
 
 ### Note: Other Useful Docker Commands to Manage Docker Containers
@@ -121,13 +140,15 @@ docker stop <container_name>
 ```
 After stopping a container, all data in the container will be deleted. To start the container again, use the above `docker start` command. However, the container will start as new.
 
+I usually just remove the container with the `docker rm` command below and re-run the `docker run` command after I exit it.
+
 **Remove a Docker Container**
 ```console
 docker rm <container_name>
 ```
 
 ## Create and Build a Sample Pebble Project
-Office Pebble Tool Guide: https://developer.rebble.io/developer.pebble.com/guides/tools-and-resources/pebble-tool/index.html
+Official Pebble Tool Guide: https://developer.rebble.io/developer.pebble.com/guides/tools-and-resources/pebble-tool/index.html
 
 ### 1. Create a Sample Pebble Project
 In the Docker interactive shell, run the following command to create a sample Pebble project
@@ -169,6 +190,16 @@ build  package.json  src  wscript
 
 ### 2. Run the Emulator
 Running the following command inside the project folder should trigger the QEMU emulator display to open
+
+```console
+pebble install --emulator <platform>
+```
+`<platform>` can be `aplite`, `basalt`, `chalk`, `diorite`, `emery`
+
+Please check Pebble Hardware Information page for more details on the platforms: https://developer.rebble.io/developer.pebble.com/guides/tools-and-resources/hardware-information/index.html
+
+Output may be like this:
+
 ```
 root@2aef30c81e77:/opt/pebble-sdk-4.5-linux64/sample# pebble install --emulator basalt
 Installing app...
@@ -242,3 +273,6 @@ X11 Forwarding:
 
 Pebble Tool: 
 - https://developer.rebble.io/developer.pebble.com/guides/tools-and-resources/pebble-tool/index.html
+
+Pebble Hardware:
+- https://developer.rebble.io/developer.pebble.com/guides/tools-and-resources/hardware-information/index.html
