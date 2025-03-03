@@ -74,7 +74,7 @@ sudo vi /etc/ssh/sshd_config
 ForwardingX11 yes
 ```
 
-3. Exit and save
+3. Save, then exit
 
 ### 2. Install X11-apps
 In host terminal, run the following command
